@@ -1,6 +1,6 @@
 pragma solidity ^0.5;
 
-import "@openzeppelin/contracts/utils/math/SafeMath.sol";
+import "openzeppelin-solidity/contracts/math/SafeMath.sol";
 import "./IBEP20.sol";
 import "./Context.sol";
 import "./Ownable.sol";
