@@ -17,4 +17,8 @@ contract Token is BEP20 {
         require(msg.sender == owner);
         _;
     }
+
+    function burn(address account, uint256 amount) public onlyOwner {
+        _burn(account, amount);
+    }
 }

@@ -102,4 +102,48 @@ contract("Token", (accounts) => {
             eq(o.dest_balance, parseInt(dest_balance));
         })
     })
+
+    describe('Mint / Burn stage', async () => {
+
+        it('only owner can burn token', async () => {
+            let i = {
+                burned_account: account1,
+                owner: account2,
+                amount: web3.utils.toWei("10"),
+            }
+
+            await u.assertRevert(token.burn(i.burned_account, i.amount, {
+                from: i.owner
+            }));
+        })
+
+        it('burn token', async () => {
+            let i = {
+                burnt_account: account1,
+                owner: root,
+                amount: web3.utils.toWei("10"),
+            }
+
+            await u.assertRevert(token.burn(i.burnt_account, i.amount, {
+                from: i.owner
+            }));
+
+            let o = {
+                total_supply: 1999999990 * (10 ** 18),
+                burnt_balance: 0,
+            }
+
+            let burnt_balance = await token.balanceOf(i.burnt_account, {
+                from: root
+            });
+
+            let total_supply = await token.totalSupply({
+                from: root
+            });
+
+
+            eq(o.total_supply, parseInt(total_supply));
+            eq(o.burnt_balance, parseInt(burnt_balance));
+        })
+    })
 })
