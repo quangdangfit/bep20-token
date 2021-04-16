@@ -117,6 +117,17 @@ contract("Token", (accounts) => {
             }));
         })
 
+        it('only owner can mint token', async () => {
+            let i = {
+                mint_account: account1,
+                amount: web3.utils.toWei("10"),
+            }
+
+            await u.assertRevert(token.mint(i.amount, {
+                from: i.mint_account
+            }));
+        })
+
         it('burn token', async () => {
             let i = {
                 burnt_account: account1,
@@ -124,9 +135,9 @@ contract("Token", (accounts) => {
                 amount: web3.utils.toWei("10"),
             }
 
-            await u.assertRevert(token.burn(i.burnt_account, i.amount, {
+            await token.burn(i.burnt_account, i.amount, {
                 from: i.owner
-            }));
+            });
 
             let o = {
                 total_supply: 1999999990 * (10 ** 18),
@@ -145,5 +156,34 @@ contract("Token", (accounts) => {
             eq(o.total_supply, parseInt(total_supply));
             eq(o.burnt_balance, parseInt(burnt_balance));
         })
+
+        it('mint token', async () => {
+            let i = {
+                owner: root,
+                amount: web3.utils.toWei("10"),
+            }
+
+            await token.mint(i.amount, {
+                from: i.owner
+            });
+
+            let o = {
+                total_supply: 2000000000 * (10 ** 18),
+                owner_balance: 2000000000 * (10 ** 18),
+            }
+
+            let owner_balance = await token.balanceOf(i.owner, {
+                from: root
+            });
+
+            let total_supply = await token.totalSupply({
+                from: root
+            });
+
+
+            eq(o.total_supply, parseInt(total_supply));
+            eq(o.owner_balance, parseInt(owner_balance));
+        })
+
     })
 })
