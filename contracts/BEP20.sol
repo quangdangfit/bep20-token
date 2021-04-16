@@ -36,11 +36,10 @@ contract BEP20 is IBEP20, Ownable, Context {
     string private _symbol;
     string private _name;
 
-    constructor(string memory name, string memory symbol, uint8 decimals, uint256 totalSupply) public {
+    constructor(string memory name, string memory symbol, uint8 decimals) public {
         _name = name;
         _symbol = symbol;
         _decimals = decimals;
-        _totalSupply = totalSupply;
     }
 
     /**
