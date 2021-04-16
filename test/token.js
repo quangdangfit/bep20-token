@@ -53,4 +53,53 @@ contract("Token", (accounts) => {
         })
 
     })
+
+    describe('Transfer stage', async () => {
+
+        it('cannot transfer when source account balance = 0', async () => {
+            let i = {
+                src_account: account1,
+                dest_account: account2,
+                amount: web3.utils.toWei("10"),
+            }
+
+            await u.assertRevert(token.transfer(i.dest_account, i.amount, {
+                from: i.src_account
+            }));
+        })
+
+        it('transfer token', async () => {
+            let i = {
+                src_account: root,
+                dest_account: account1,
+                amount: web3.utils.toWei("10"),
+            }
+
+            await token.transfer(i.dest_account, i.amount, {
+                from: i.src_account
+            });
+
+            let src_balance = await token.balanceOf(i.src_account, {
+                from: root
+            });
+
+            let dest_balance = await token.balanceOf(i.dest_account, {
+                from: root
+            });
+
+            let total_supply = await token.totalSupply({
+                from: root
+            });
+
+            let o = {
+                total_supply: 2000000000 * (10 ** 18),
+                src_balance: 1999999990 * (10 ** 18),
+                dest_balance: 10 * (10 ** 18),
+            }
+
+            eq(o.total_supply, parseInt(total_supply));
+            eq(o.src_balance, parseInt(src_balance));
+            eq(o.dest_balance, parseInt(dest_balance));
+        })
+    })
 })
